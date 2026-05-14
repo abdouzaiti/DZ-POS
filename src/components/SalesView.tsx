@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Search, 
@@ -24,9 +24,10 @@ import {
 } from 'lucide-react';
 import { usePOS } from '../hooks/usePOS';
 import { MOCK_PRODUCTS } from '../mockData';
-import { Category, Product } from '../types';
+import { Category, Product, Sale } from '../types';
 import { cn, formatCurrency } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
+import { SalesHistoryModal } from './SalesHistoryModal';
 
 export const SalesView = () => {
   const { t, i18n } = useTranslation();
@@ -46,11 +47,27 @@ export const SalesView = () => {
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [showReceipt, setShowReceipt] = useState<Sale | null>(null);
+  const [showSalesHistoryModal, setShowSalesHistoryModal] = useState(false);
   const [selectedProductForManual, setSelectedProductForManual] = useState<Product | null>(null);
   const [manualValue, setManualValue] = useState('');
 
   const quickProducts = useMemo(() => MOCK_PRODUCTS.filter(p => p.isQuick), []);
   const lastItem = cart.length > 0 ? cart[cart.length - 1] : null;
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Complete sale without ticket on Enter
+      if (e.key === 'Enter') {
+        // Prevent if we are inside manual entry
+        if (!selectedProductForManual && cart.length > 0) {
+          handleCompleteSale('Cash', false);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [cart, selectedProductForManual]);
 
   const filteredProducts = useMemo(() => {
     return MOCK_PRODUCTS.filter(p => {
@@ -88,9 +105,10 @@ export const SalesView = () => {
     }
   };
 
-  const handleCompleteSale = (method: string) => {
+  const handleCompleteSale = (method: string, showModal: boolean = true) => {
+    console.log("handleCompleteSale called", { method, showModal });
     const sale = completeSale(method);
-    if (sale) {
+    if (sale && showModal) {
       setShowReceipt(sale);
     }
   };
@@ -384,19 +402,26 @@ export const SalesView = () => {
       <div className="h-20 shrink-0 bg-slate-200 border-t-4 border-slate-400 p-1.5 grid grid-cols-8 gap-1.5">
         <ActionButton color="bg-blue-200" label={t('inventory')} sub="F2" icon={Plus} />
         <ActionButton color="bg-red-600" label={t('cancel')} sub="Ctrl+S" icon={Trash2} textColor="text-white" className="border-red-700" />
-        <ActionButton color="bg-slate-300" label="Rappel Ticket" sub="Ctrl+R" icon={History} />
+        <ActionButton color="bg-slate-300" label="Rappel Ticket" sub="Ctrl+R" icon={History} onClick={() => setShowSalesHistoryModal(true)} />
         <ActionButton 
-          color="bg-green-700" 
-          label={`${t('validate')} (${t('without_ticket')})`} 
-          sub="F11" 
-          onClick={() => handleCompleteSale('Cash')}
+          color="bg-green-600" 
+          label={`${t('validate')} (${t('print')})`} 
+          sub="F10" 
+          onClick={() => handleCompleteSale('Cash', true)}
           textColor="text-white" 
-          className="col-span-1 border-green-800 shadow-[inset_0_4px_10px_rgba(255,255,255,0.3)] ring-4 ring-green-600/30 ring-offset-2"
+          className="col-span-1 shadow-md"
         />
         
         {/* Row 2 Extras */}
         <ActionButton color="bg-blue-400" label="Mouvement Caisse" sub="Ctrl+K" icon={ArrowLeftRight} textColor="text-white" />
-        <ActionButton color="bg-slate-400" label="Entrée" sub="Ctrl+E" icon={ChevronRight} textColor="text-white" />
+        <ActionButton 
+          color="bg-green-700" 
+          label="Sans Ticket" 
+          sub="Entrée (Enter)" 
+          onClick={() => handleCompleteSale('Cash', false)}
+          textColor="text-white" 
+          className="col-span-1 shadow-[inset_0_4px_10px_rgba(255,255,255,0.3)] ring-2 ring-green-500/50"
+        />
         <ActionButton color="bg-blue-300" label={t('wait')} sub="F9" icon={Pause} />
         <ActionButton 
           color="bg-red-700" 
@@ -474,6 +499,13 @@ export const SalesView = () => {
         )}
 
       </AnimatePresence>
+
+      <SalesHistoryModal
+        isOpen={showSalesHistoryModal}
+        onClose={() => setShowSalesHistoryModal(false)}
+        sales={sales}
+        onSelectSale={(sale) => setShowReceipt(sale)}
+      />
     </div>
   );
 };
