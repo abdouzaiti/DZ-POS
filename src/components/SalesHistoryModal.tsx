@@ -57,8 +57,8 @@ export function SalesHistoryModal({ isOpen, onClose, sales, onSelectSale }: Sale
               <History size={24} className="text-white" />
             </div>
             <div className="flex flex-col">
-               <span className="text-xl font-black uppercase tracking-widest">{t('sales_history', 'Historique des Ventes')}</span>
-               <span className="text-xs text-blue-300 font-bold tracking-tighter">Aujourd'hui ({sales.length} ventes)</span>
+               <span className="text-xl font-black uppercase tracking-widest">{t('sales_history')}</span>
+               <span className="text-xs text-blue-300 font-bold tracking-tighter">{t('today_sales', { count: sales.length })}</span>
             </div>
           </div>
           <button 
@@ -77,7 +77,7 @@ export function SalesHistoryModal({ isOpen, onClose, sales, onSelectSale }: Sale
               autoFocus
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Rechercher par N° ticket, article, ou heure (ex: 14:30)..."
+              placeholder={t('search_history_placeholder')}
               className="w-full pl-10 pr-4 py-3 bg-white border-2 border-slate-300 rounded-lg text-sm font-bold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 shadow-inner"
             />
           </div>
@@ -87,7 +87,7 @@ export function SalesHistoryModal({ isOpen, onClose, sales, onSelectSale }: Sale
           {filteredSales.length === 0 ? (
             <div className="text-center py-12 text-slate-400 flex flex-col items-center">
               <Receipt size={48} className="opacity-20 mb-4" />
-              <p className="text-lg font-bold">Aucune vente trouvée</p>
+              <p className="text-lg font-bold">{t('no_sales_found')}</p>
             </div>
           ) : (
             filteredSales.map(sale => (
@@ -101,7 +101,7 @@ export function SalesHistoryModal({ isOpen, onClose, sales, onSelectSale }: Sale
               >
                 <div className="flex items-center gap-4">
                   <div className="bg-slate-100 rounded-lg p-2 min-w-[70px] text-center border border-slate-200">
-                    <div className="text-[10px] font-black uppercase text-slate-500">Ticket</div>
+                    <div className="text-[10px] font-black uppercase text-slate-500">{t('ticket')}</div>
                     <div className="text-lg font-black font-digital text-blue-600">
                       {sale.sequentialId.toString().padStart(4, '0')}
                     </div>

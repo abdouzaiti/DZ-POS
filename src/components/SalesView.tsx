@@ -402,7 +402,7 @@ export const SalesView = () => {
       <div className="h-20 shrink-0 bg-slate-200 border-t-4 border-slate-400 p-1.5 grid grid-cols-8 gap-1.5">
         <ActionButton color="bg-blue-200" label={t('inventory')} sub="F2" icon={Plus} />
         <ActionButton color="bg-red-600" label={t('cancel')} sub="Ctrl+S" icon={Trash2} textColor="text-white" className="border-red-700" />
-        <ActionButton color="bg-slate-300" label="Rappel Ticket" sub="Ctrl+R" icon={History} onClick={() => setShowSalesHistoryModal(true)} />
+        <ActionButton color="bg-slate-300" label={t('ticket_recall')} sub="Ctrl+R" icon={History} onClick={() => setShowSalesHistoryModal(true)} />
         <ActionButton 
           color="bg-green-600" 
           label={`${t('validate')} (${t('print')})`} 
@@ -413,10 +413,10 @@ export const SalesView = () => {
         />
         
         {/* Row 2 Extras */}
-        <ActionButton color="bg-blue-400" label="Mouvement Caisse" sub="Ctrl+K" icon={ArrowLeftRight} textColor="text-white" />
+        <ActionButton color="bg-blue-400" label={t('cash_movement')} sub="Ctrl+K" icon={ArrowLeftRight} textColor="text-white" />
         <ActionButton 
           color="bg-green-700" 
-          label="Sans Ticket" 
+          label={t('without_ticket')} 
           sub="Entrée (Enter)" 
           onClick={() => handleCompleteSale('Cash', false)}
           textColor="text-white" 

@@ -107,6 +107,12 @@ const resources = {
       "id": "N° TICKET",
       "print_receipt": "Imprimer Reçu",
       "All": "Tout",
+      "sales_history": "Historique des Ventes",
+      "today_sales": "Aujourd'hui ({{count}} ventes)",
+      "search_history_placeholder": "Rechercher par N° ticket, article, ou heure (ex: 14:30)...",
+      "no_sales_found": "Aucune vente trouvée",
+      "ticket_recall": "Rappel Ticket",
+      "cash_movement": "Mouvement Caisse",
     }
   },
   ar: {
@@ -218,6 +224,12 @@ const resources = {
       "id": "رقم التذكرة",
       "print_receipt": "طباعة الوصل",
       "All": "الكل",
+      "sales_history": "تاريخ المبيعات",
+      "today_sales": "اليوم ({{count}} مبيعات)",
+      "search_history_placeholder": "ابحث برقم التذكرة، المادة، أو الوقت (مثال: 14:30)...",
+      "no_sales_found": "لم يتم العثور على مبيعات",
+      "ticket_recall": "استرجاع التذكرة",
+      "cash_movement": "حركة الصندوق",
     }
   }
 };
