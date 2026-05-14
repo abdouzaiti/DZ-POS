@@ -1,0 +1,6 @@
+{
+  "name": "DzPOS Pro",
+  "description": "Système de Point de Vente (Caisse) professionnel pour supermarchés en Algérie. Gestion de stock, impression de tickets, support bilingue (Arabe/Français) et interface optimisée pour une caisse rapide.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
