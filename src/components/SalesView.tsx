@@ -39,7 +39,8 @@ export const SalesView = () => {
     subtotal, 
     tax, 
     total, 
-    completeSale 
+    completeSale,
+    sales
   } = usePOS();
 
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
@@ -118,8 +119,15 @@ export const SalesView = () => {
                 <p className="text-xs">{t('address')}</p>
               </div>
 
-              <div className="flex justify-between text-xs mb-4">
-                <span className="font-bold">Facture: #{showReceipt.id}</span>
+              <div className="flex flex-col gap-1 text-[10px] mb-4 border-b border-slate-200 pb-2">
+                <div className="flex justify-between">
+                  <span className="font-bold">Bon N°: {showReceipt.sequentialId.toString().padStart(4, '0')}</span>
+                  <span>#{showReceipt.id.slice(0, 8)}</span>
+                </div>
+                <div className="flex justify-between text-slate-500 font-bold">
+                  <span>{new Date(showReceipt.date).toLocaleDateString('fr-FR')}</span>
+                  <span>{new Date(showReceipt.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
               </div>
 
               <div className="space-y-2 mb-4 border-b-2 border-dashed border-slate-300 pb-4">
@@ -161,7 +169,7 @@ export const SalesView = () => {
       <div className="h-32 bg-white border-b-4 border-slate-300 grid grid-cols-12 shrink-0 shadow-md">
         <div className="col-span-3 p-3 flex flex-col justify-between border-e-2 border-slate-200">
           <div className="flex justify-between text-[10px] font-black text-blue-600 uppercase font-digital">
-            <span>{t('ticket')}: 10001</span>
+            <span>{t('ticket')}: {(sales.length + 1).toString().padStart(5, '0')}</span>
             <span>{t('pos_id')}: 01</span>
           </div>
           <div className="mt-1">

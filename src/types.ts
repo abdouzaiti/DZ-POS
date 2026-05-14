@@ -26,6 +26,7 @@ export interface CartItem extends Product {
 
 export interface Sale {
   id: string;
+  sequentialId: number;
   items: CartItem[];
   total: number;
   date: string;

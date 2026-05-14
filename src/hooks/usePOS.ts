@@ -56,6 +56,7 @@ export function usePOS() {
     
     const newSale: Sale = {
       id: Math.random().toString(36).substr(2, 9).toUpperCase(),
+      sequentialId: sales.length + 1,
       items: [...cart],
       total,
       date: new Date().toISOString(),
