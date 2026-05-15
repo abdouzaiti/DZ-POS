@@ -22,6 +22,7 @@ import { format } from 'date-fns';
 import { fr, arDZ } from 'date-fns/locale';
 
 import { useTheme } from '../contexts/ThemeContext';
+import { useSettings } from '../contexts/SettingsContext';
 
 interface SidebarItemProps {
   icon: React.ElementType;
@@ -46,12 +47,13 @@ const SidebarItem = ({ icon: Icon, label, active, onClick, collapsed }: SidebarI
   </button>
 );
 
-export const Layout = ({ children, activeTab, setActiveTab }: { children: React.ReactNode, activeTab: string, setActiveTab: (tab: string) => void }) => {
+export const Layout = ({ children, activeTab, setActiveTab, onLogout }: { children: React.ReactNode, activeTab: string, setActiveTab: (tab: string) => void, onLogout?: () => void }) => {
   const { t, i18n } = useTranslation();
   const [collapsed, setCollapsed] = useState(false);
   const [time, setTime] = useState(new Date());
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const { theme, toggleTheme } = useTheme();
+  const { settings } = useSettings();
 
   useEffect(() => {
     document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
@@ -119,7 +121,11 @@ export const Layout = ({ children, activeTab, setActiveTab }: { children: React.
           <SidebarItem
             icon={LogOut}
             label={t('exit')}
-            onClick={() => {}}
+            onClick={() => {
+              if (onLogout) {
+                onLogout();
+              }
+            }}
             collapsed={collapsed}
           />
         </div>
@@ -131,12 +137,12 @@ export const Layout = ({ children, activeTab, setActiveTab }: { children: React.
         <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-14 flex items-center justify-between px-4 shrink-0 transition-colors duration-300">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 uppercase transition-colors duration-300">
-              {activeTab === 'sales' ? t('store_name') : t(activeTab)}
+              {activeTab === 'sales' ? settings.marketName : t(activeTab)}
             </h1>
             <div className="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-2" />
             <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium transition-colors duration-300">
               <User size={16} />
-              <span>Noureddine (Admin)</span>
+              <span className="capitalize">{settings.adminUsername} (Admin)</span>
               <span className="flex items-center gap-1 text-[10px] bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full uppercase">Poste 01</span>
             </div>
           </div>
