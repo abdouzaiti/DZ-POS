@@ -58,8 +58,12 @@ export const SalesView = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Complete sale without ticket on Enter
       if (e.key === 'Enter') {
-        // Prevent if we are inside manual entry
-        if (!selectedProductForManual && cart.length > 0) {
+        // Check if we are in an input. 
+        // If it's the barcode input, we handle it specifically there.
+        // If it's something else (manual price), it has its own logic.
+        const isInput = document.activeElement?.tagName === 'INPUT';
+        
+        if (!isInput && !selectedProductForManual && cart.length > 0) {
           handleCompleteSale('Cash', false);
         }
       }
@@ -530,15 +534,15 @@ const ActionButton = ({
   <button 
     onClick={onClick}
     className={cn(
-      "flex flex-col items-center justify-center border border-slate-500 hover:brightness-110 active:brightness-90 active:scale-95 transition-all shadow-sm rounded-sm p-1",
+      "flex flex-col items-center justify-center border border-slate-500 hover:brightness-110 active:brightness-90 active:scale-95 transition-all shadow-sm rounded-sm p-1.5",
       color,
       className
     )}
   >
-    <div className="flex items-center gap-1">
-      {Icon && <Icon size={14} className={textColor} />}
-      <span className={cn("text-[9px] font-black uppercase leading-tight text-center", textColor)}>{label}</span>
+    <div className="flex items-center gap-2">
+      {Icon && <Icon size={20} className={textColor} />}
+      <span className={cn("text-sm font-black uppercase leading-[1.1] text-center px-0.5 tracking-tighter", textColor)}>{label}</span>
     </div>
-    <span className={cn("text-[8px] opacity-70 font-bold", textColor)}>{sub}</span>
+    <span className={cn("text-[11px] opacity-80 font-bold mt-0.5", textColor)}>{sub}</span>
   </button>
 );
