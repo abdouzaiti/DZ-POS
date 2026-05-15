@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Search, 
@@ -25,7 +25,7 @@ import {
 import { usePOS } from '../hooks/usePOS';
 import { MOCK_PRODUCTS } from '../mockData';
 import { Category, Product, Sale } from '../types';
-import { cn, formatCurrency } from '../lib/utils';
+import { cn, formatCurrency, formatNumber } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { SalesHistoryModal } from './SalesHistoryModal';
 
@@ -50,28 +50,96 @@ export const SalesView = () => {
   const [showSalesHistoryModal, setShowSalesHistoryModal] = useState(false);
   const [selectedProductForManual, setSelectedProductForManual] = useState<Product | null>(null);
   const [manualValue, setManualValue] = useState('');
+  const [showCreditModal, setShowCreditModal] = useState(false);
+  const [creditCustomerName, setCreditCustomerName] = useState('');
+  const barcodeInputRef = useRef<HTMLInputElement>(null);
 
   const quickProducts = useMemo(() => MOCK_PRODUCTS.filter(p => p.isQuick), []);
   const lastItem = cart.length > 0 ? cart[cart.length - 1] : null;
 
+  const handleManualSubmit = useCallback(() => {
+    if (selectedProductForManual && manualValue) {
+      addToCart(selectedProductForManual, parseFloat(manualValue));
+      setSelectedProductForManual(null);
+      setManualValue('');
+      // Focus back to barcode input after a short delay
+      setTimeout(() => {
+        barcodeInputRef.current?.focus();
+      }, 100);
+    }
+  }, [selectedProductForManual, manualValue, addToCart]);
+
+  const handleCompleteSale = useCallback((method: string, showModal: boolean = true) => {
+    console.log("handleCompleteSale called", { method, showModal });
+    const sale = completeSale(method);
+    if (sale && showModal) {
+      setShowReceipt(sale);
+    }
+  }, [completeSale]);
+
+  const handleCreditSale = () => {
+    if (cart.length === 0) return;
+    setShowCreditModal(true);
+    setCreditCustomerName('');
+  };
+
+  const submitCreditSale = () => {
+    if (!creditCustomerName) return;
+    // For now, we'll just complete it as 'Credit' and perhaps prefix the ID or something.
+    // In a real app, this would go to a Credits table.
+    const sale = completeSale(`Credit - ${creditCustomerName}`);
+    if (sale) {
+      setShowReceipt(sale);
+      setShowCreditModal(false);
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Complete sale without ticket on Enter
+      // If manual entry modal is open
+      if (selectedProductForManual) {
+        if (/^[0-9.]$/.test(e.key)) {
+          setManualValue(prev => prev + e.key);
+          e.preventDefault();
+        } else if (e.key === 'Backspace') {
+          setManualValue(prev => prev.slice(0, -1));
+          e.preventDefault();
+        } else if (e.key === 'Enter') {
+          handleManualSubmit();
+          e.preventDefault();
+        } else if (e.key === 'Escape') {
+          setSelectedProductForManual(null);
+          e.preventDefault();
+        }
+        return;
+      }
+
+      // Complete sale logic
       if (e.key === 'Enter') {
-        // Check if we are in an input. 
-        // If it's the barcode input, we handle it specifically there.
-        // If it's something else (manual price), it has its own logic.
-        const isInput = document.activeElement?.tagName === 'INPUT';
-        
-        if (!isInput && !selectedProductForManual && cart.length > 0) {
-          handleCompleteSale('Cash', false);
+        const isInputFocused = document.activeElement instanceof HTMLInputElement;
+        const isManualEntry = !!selectedProductForManual;
+        const isCreditModal = showCreditModal;
+        const isReceiptOpen = !!showReceipt;
+
+        if (cart.length > 0 && !isManualEntry && !isCreditModal && !isReceiptOpen) {
+          // If barcode input is focused, only complete if it's empty
+          if (isInputFocused) {
+            const input = document.activeElement as HTMLInputElement;
+            if (input.value === '') {
+              handleCompleteSale('Cash', true);
+              e.preventDefault();
+            }
+          } else {
+            handleCompleteSale('Cash', true);
+            e.preventDefault();
+          }
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [cart, selectedProductForManual]);
+  }, [cart, selectedProductForManual, manualValue, handleManualSubmit, handleCompleteSale, showCreditModal, showReceipt]);
 
   const filteredProducts = useMemo(() => {
     return MOCK_PRODUCTS.filter(p => {
@@ -86,16 +154,12 @@ export const SalesView = () => {
     if (product.unit === 'kg' || product.unit === 'g') {
       setSelectedProductForManual(product);
       setManualValue('');
+      // Blur any focused input to ensure keyboard redirected correctly
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     } else {
       addToCart(product);
-    }
-  };
-
-  const handleManualSubmit = () => {
-    if (selectedProductForManual && manualValue) {
-      addToCart(selectedProductForManual, parseFloat(manualValue));
-      setSelectedProductForManual(null);
-      setManualValue('');
     }
   };
 
@@ -106,14 +170,6 @@ export const SalesView = () => {
       handleManualSubmit();
     } else {
       setManualValue(prev => prev + val);
-    }
-  };
-
-  const handleCompleteSale = (method: string, showModal: boolean = true) => {
-    console.log("handleCompleteSale called", { method, showModal });
-    const sale = completeSale(method);
-    if (sale && showModal) {
-      setShowReceipt(sale);
     }
   };
 
@@ -164,7 +220,7 @@ export const SalesView = () => {
 
               <div className="flex justify-between text-2xl font-black pt-4 font-digital border-t-2 border-slate-900 mt-4 leading-none">
                 <span>TOTAL</span>
-                <span>{showReceipt.total.toFixed(0)} DA</span>
+                <span>{formatCurrency(showReceipt.total, i18n.language)}</span>
               </div>
 
               <div className="flex gap-2 mt-8">
@@ -189,16 +245,16 @@ export const SalesView = () => {
 
       {/* TOP DISPLAY AREA */}
       <div className="h-32 bg-white border-b-4 border-slate-300 grid grid-cols-12 shrink-0 shadow-md">
-        <div className="col-span-3 p-3 flex flex-col justify-between border-e-2 border-slate-200">
-          <div className="flex justify-between text-[10px] font-black text-blue-600 uppercase font-digital">
+        <div className="col-span-3 p-4 flex flex-col justify-between border-e-2 border-slate-200">
+          <div className="flex justify-between text-sm font-black text-blue-600 uppercase font-digital">
             <span>{t('ticket')}: {(sales.length + 1).toString().padStart(5, '0')}</span>
             <span>{t('pos_id')}: 01</span>
           </div>
-          <div className="mt-1">
-            <p className="text-[9px] font-black text-white px-1.5 py-0.5 bg-slate-500 uppercase tracking-widest w-fit rounded">
+          <div className="mt-2">
+            <p className="text-[11px] font-black text-white px-2 py-0.5 bg-slate-500 uppercase tracking-widest w-fit rounded mb-1">
               {t('last_item')}
             </p>
-            <h2 className="text-xs font-black text-slate-800 uppercase truncate tracking-tighter mt-0.5">
+            <h2 className="text-lg font-black text-slate-900 uppercase truncate tracking-tighter leading-tight">
               {lastItem ? lastItem.name : "---"}
             </h2>
           </div>
@@ -210,7 +266,7 @@ export const SalesView = () => {
           </div>
           <div className="w-full flex items-center justify-center">
              <span className="text-7xl lg:text-8xl font-black text-slate-900 tracking-tighter tabular-nums font-digital leading-none">
-               {total.toFixed(0)} <span className="text-2xl lg:text-3xl text-slate-400 uppercase ms-2 select-none tracking-normal font-sans">DA</span>
+               {formatNumber(total)} <span className="text-2xl lg:text-3xl text-slate-400 uppercase ms-2 select-none tracking-normal font-sans">DA</span>
              </span>
           </div>
         </div>
@@ -248,11 +304,11 @@ export const SalesView = () => {
                      <td className="p-2">
                         <div className="flex flex-col">
                            <span className="uppercase truncate text-slate-800 tracking-tight text-[11px] leading-tight">{item.name}</span>
-                           <span className="text-[9px] text-slate-400 font-digital">{item.price} DA</span>
+                           <span className="text-[9px] text-slate-400 font-digital">{formatCurrency(item.price, i18n.language)}</span>
                         </div>
                      </td>
                      <td className="p-2 text-center text-blue-700 font-digital text-base bg-blue-50/20">{item.quantity}</td>
-                     <td className="p-2 text-end font-digital pe-4 text-slate-900 text-lg tracking-tight bg-slate-100/10">{ (item.price * item.quantity).toFixed(0) }</td>
+                     <td className="p-2 text-end font-digital pe-4 text-slate-900 text-lg tracking-tight bg-slate-100/10">{ formatNumber(item.price * item.quantity) }</td>
                    </tr>
                  ))}
                  {Array.from({ length: Math.max(0, 15 - cart.length) }).map((_, i) => (
@@ -306,7 +362,7 @@ export const SalesView = () => {
                     {p.id.startsWith('ch') && <span className="text-2xl">🧀</span>}
                  </div>
                  <span className="text-[8px] font-black text-center leading-[0.8rem] uppercase line-clamp-2 w-full text-slate-700 h-6 overflow-hidden">{p.name}</span>
-                 <div className="text-[11px] font-black text-blue-700 mt-0.5 font-digital bg-blue-50 px-2 rounded-full border border-blue-100">{p.price}</div>
+                 <div className="text-[11px] font-black text-blue-700 mt-0.5 font-digital bg-blue-50 px-2 rounded-full border border-blue-100">{formatNumber(p.price)}</div>
                </button>
              ))}
            </div>
@@ -354,7 +410,7 @@ export const SalesView = () => {
                        {p.name}
                     </span>
                     <div className="w-full bg-slate-900 text-yellow-500 text-[13px] font-black rounded py-0.5 font-digital text-center border-t border-slate-700">
-                      {p.price}
+                      {formatNumber(p.price)}
                     </div>
                  </div>
                </button>
@@ -396,14 +452,7 @@ export const SalesView = () => {
         
         {/* Row 2 Extras */}
         <ActionButton color="bg-blue-400" label={t('cash_movement')} sub="Ctrl+K" icon={ArrowLeftRight} textColor="text-white" />
-        <ActionButton 
-          color="bg-green-700" 
-          label={t('without_ticket')} 
-          sub="Entrée (Enter)" 
-          onClick={() => handleCompleteSale('Cash', false)}
-          textColor="text-white" 
-          className="col-span-1 shadow-[inset_0_4px_10px_rgba(255,255,255,0.3)] ring-2 ring-green-500/50"
-        />
+        <ActionButton color="bg-orange-500" label={t('credit')} sub="F4" icon={Users} onClick={handleCreditSale} textColor="text-white" />
         <ActionButton 
           color="bg-red-700" 
           label={t('close')} 
@@ -487,6 +536,54 @@ export const SalesView = () => {
         sales={sales}
         onSelectSale={(sale) => setShowReceipt(sale)}
       />
+
+      {/* Credit Modal */}
+      <AnimatePresence>
+        {showCreditModal && (
+          <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col border-8 border-orange-500"
+            >
+              <div className="bg-orange-500 p-4 text-white flex justify-between items-center transition-colors">
+                <div className="flex items-center gap-3">
+                   <Users size={24} />
+                   <span className="font-black uppercase tracking-widest">{t('credit')}</span>
+                </div>
+                <button onClick={() => setShowCreditModal(false)}>
+                  <XCircle size={24} />
+                </button>
+              </div>
+              <div className="p-6 space-y-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('customer_name')}</label>
+                  <input 
+                    type="text" 
+                    autoFocus
+                    value={creditCustomerName}
+                    onChange={(e) => setCreditCustomerName(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && submitCreditSale()}
+                    className="w-full bg-slate-100 border-2 border-slate-200 rounded-xl px-4 py-3 text-lg font-bold outline-none focus:border-orange-500 transition-all font-sans"
+                    placeholder="Ex: Mohamed Amine"
+                  />
+                </div>
+                <div className="bg-orange-50 p-3 rounded-xl border border-orange-100 flex items-center justify-between">
+                   <span className="text-[10px] font-black text-orange-400 uppercase">Montant total</span>
+                   <span className="text-xl font-black text-orange-700 font-digital">{formatCurrency(total, i18n.language)}</span>
+                </div>
+                <button 
+                  onClick={submitCreditSale}
+                  className="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white font-black rounded-2xl shadow-lg transition-all active:scale-95 uppercase text-lg tracking-tight"
+                >
+                  {t('validate')}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { Layout } from './components/Layout';
 import { SalesView } from './components/SalesView';
 import { DashboardView } from './components/DashboardView';
 import { InventoryView } from './components/InventoryView';
+import { CreditView } from './components/CreditView';
 
 export default function App() {
   const [activeView, setActiveView] = useState('sales');
@@ -20,6 +21,8 @@ export default function App() {
         return <SalesView />;
       case 'inventory':
         return <InventoryView />;
+      case 'credits':
+        return <CreditView />;
       default:
         return (
           <div className="flex-1 flex items-center justify-center bg-white dark:bg-slate-900">

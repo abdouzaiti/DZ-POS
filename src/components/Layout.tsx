@@ -72,8 +72,7 @@ export const Layout = ({ children, activeTab, setActiveTab }: { children: React.
     { id: 'dashboard', icon: BarChart3, label: t('dashboard') },
     { id: 'sales', icon: ShoppingCart, label: t('sales_today') },
     { id: 'inventory', icon: Package, label: t('inventory') },
-    { id: 'customers', icon: Users, label: t('customer') },
-    { id: 'reports', icon: FileText, label: t('reports') },
+    { id: 'credits', icon: Users, label: t('credits') },
     { id: 'settings', icon: Settings, label: t('settings') },
   ];
 
@@ -127,7 +126,7 @@ export const Layout = ({ children, activeTab, setActiveTab }: { children: React.
         <header className="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-4 shrink-0">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-bold text-slate-800 uppercase">
-              {t(activeTab === 'sales' ? 'store_name' : activeTab)}
+              {activeTab === 'sales' ? t('store_name') : t(activeTab)}
             </h1>
             <div className="h-4 w-px bg-slate-300 mx-2" />
             <div className="flex items-center gap-2 text-slate-500 font-medium">

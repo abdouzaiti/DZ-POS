@@ -32,3 +32,13 @@ export interface Sale {
   date: string;
   paymentMethod: string;
 }
+
+export interface Credit {
+  id: string;
+  customerName: string;
+  date: string;
+  total: number;
+  items: CartItem[];
+  sequentialId: number;
+  ticketId: string;
+}

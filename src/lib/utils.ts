@@ -5,6 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number, lng: string = 'fr') {
-  return amount.toLocaleString(lng === 'fr' ? 'fr-FR' : 'ar-DZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' DA';
+export function formatNumber(amount: number) {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+}
+
+export function formatCurrency(amount: number, _lng: string = 'fr') {
+  return formatNumber(amount) + ' DA';
 }

@@ -230,3 +230,29 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.GROCERY,
   },
 ];
+
+export const MOCK_CREDITS = [
+  {
+    id: "cr1",
+    customerName: "Mohamed Amine",
+    date: new Date().toISOString(),
+    total: 1450.00,
+    sequentialId: 101,
+    ticketId: "TKT-00101",
+    items: [
+      { id: "1", name: "Selecto 1.5L", price: 135, quantity: 2, stock: 45, category: "Drinks", barcode: "6130001001" },
+      { id: "s1", name: "Sucre Baguette 1kg", price: 105, quantity: 5, stock: 100, category: "Grocery", barcode: "6130003003" }
+    ]
+  },
+  {
+    id: "cr2",
+    customerName: "Youcef Bou",
+    date: new Date(Date.now() - 86400000).toISOString(),
+    total: 3200.00,
+    sequentialId: 98,
+    ticketId: "TKT-00098",
+    items: [
+      { id: "o1", name: "Huile Elio 5L", price: 650, quantity: 4, stock: 30, category: "Grocery", barcode: "6130003004" }
+    ]
+  }
+];

@@ -113,6 +113,12 @@ const resources = {
       "no_sales_found": "Aucune vente trouvée",
       "ticket_recall": "Rappel Ticket",
       "cash_movement": "Mouvement Caisse",
+      "credits": "Crédits (Dettes)",
+      "credit": "Crédit",
+      "customer_name": "Nom du Client",
+      "date": "Date",
+      "total_credit": "Total Crédit",
+      "add_credit": "Nouveau Crédit",
     }
   },
   ar: {
@@ -230,6 +236,12 @@ const resources = {
       "no_sales_found": "لم يتم العثور على مبيعات",
       "ticket_recall": "استرجاع التذكرة",
       "cash_movement": "حركة الصندوق",
+      "credits": "الزبائن",
+      "credit": "دين",
+      "customer_name": "اسم الزبون",
+      "date": "التاريخ",
+      "total_credit": "مجموع الدين",
+      "add_credit": "إضافة دين",
     }
   }
 };
