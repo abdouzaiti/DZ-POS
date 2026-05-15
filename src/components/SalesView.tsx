@@ -204,7 +204,7 @@ export const SalesView = () => {
           </div>
         </div>
 
-        <div className="col-span-6 p-1 flex flex-col items-center justify-center bg-white border-x-4 border-slate-200">
+        <div className="col-span-9 p-1 flex flex-col items-center justify-center bg-white border-s-4 border-slate-200">
           <div className="text-right w-full pr-8">
             <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{t('total')}</span>
           </div>
@@ -212,27 +212,6 @@ export const SalesView = () => {
              <span className="text-7xl lg:text-8xl font-black text-slate-900 tracking-tighter tabular-nums font-digital leading-none">
                {total.toFixed(0)} <span className="text-2xl lg:text-3xl text-slate-400 uppercase ms-2 select-none tracking-normal font-sans">DA</span>
              </span>
-          </div>
-        </div>
-
-        <div className="col-span-3 p-2 flex flex-col justify-between bg-slate-50">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black w-24 text-slate-600 uppercase">{t('client')}:</span>
-              <input type="text" value={t('guest_customer')} readOnly className="flex-1 bg-white border-2 border-slate-200 px-2 py-0.5 text-xs font-bold shadow-inner" />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black w-24 text-slate-600 uppercase">{t('balance')} / R:</span>
-              <input type="text" value={`0 DA`} readOnly className="flex-1 bg-white border-2 border-slate-200 px-2 py-0.5 text-xs font-bold text-blue-600 shadow-inner" />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black w-24 text-slate-600 uppercase">{t('points')}:</span>
-              <input type="text" value="1 450.00" readOnly className="flex-1 bg-white border-2 border-slate-200 px-2 py-0.5 text-xs font-bold shadow-inner" />
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <button className="flex-1 bg-white hover:bg-blue-50 text-[10px] font-black py-2 border-2 border-slate-200 rounded shadow-sm transition-colors text-blue-700 uppercase">{t('partial_payment')}</button>
-            <button className="flex-1 bg-white hover:bg-blue-50 text-[10px] font-black py-2 border-2 border-slate-200 rounded shadow-sm transition-colors text-blue-700 uppercase">{t('discount')} (Ctrl+R)</button>
           </div>
         </div>
       </div>
@@ -403,8 +382,7 @@ export const SalesView = () => {
       </div>
 
       {/* BOTTOM ACTION BAR */}
-      <div className="h-20 shrink-0 bg-slate-200 border-t-4 border-slate-400 p-1.5 grid grid-cols-8 gap-1.5">
-        <ActionButton color="bg-blue-200" label={t('inventory')} sub="F2" icon={Plus} />
+      <div className="h-20 shrink-0 bg-slate-200 border-t-4 border-slate-400 p-1.5 grid grid-cols-6 gap-1.5">
         <ActionButton color="bg-red-600" label={t('cancel')} sub="Ctrl+S" icon={Trash2} textColor="text-white" className="border-red-700" />
         <ActionButton color="bg-slate-300" label={t('ticket_recall')} sub="Ctrl+R" icon={History} onClick={() => setShowSalesHistoryModal(true)} />
         <ActionButton 
@@ -426,7 +404,6 @@ export const SalesView = () => {
           textColor="text-white" 
           className="col-span-1 shadow-[inset_0_4px_10px_rgba(255,255,255,0.3)] ring-2 ring-green-500/50"
         />
-        <ActionButton color="bg-blue-300" label={t('wait')} sub="F9" icon={Pause} />
         <ActionButton 
           color="bg-red-700" 
           label={t('close')} 
