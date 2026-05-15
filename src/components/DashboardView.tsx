@@ -48,10 +48,10 @@ export const DashboardView = () => {
   const { t, i18n } = useTranslation();
   
   const stats = [
-    { label: t('sales_today'), value: '450,000 DZD', icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50' },
-    { label: t('transactions'), value: '1,240', icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: t('low_stock'), value: '12', icon: AlertTriangle, color: 'text-orange-600', bg: 'bg-orange-50' },
-    { label: t('new_customers'), value: '24', icon: Users, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: t('sales_today'), value: '450,000 DZD', icon: TrendingUp, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-900/20' },
+    { label: t('transactions'), value: '1,240', icon: ShoppingBag, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+    { label: t('low_stock'), value: '12', icon: AlertTriangle, color: 'text-orange-600 dark:text-orange-400', bg: 'bg-orange-50 dark:bg-orange-900/20' },
+    { label: t('new_customers'), value: '24', icon: Users, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20' },
   ];
 
   return (
@@ -88,13 +88,13 @@ export const DashboardView = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Chart */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border dark:border-slate-800 shadow-sm overflow-hidden h-96 flex flex-col">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border dark:border-slate-800 shadow-sm overflow-hidden h-96 flex flex-col transition-colors duration-300">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-black text-lg uppercase tracking-tight flex items-center gap-2">
-              <TrendingUp size={20} className="text-blue-600" />
+            <h3 className="font-black text-lg uppercase tracking-tight flex items-center gap-2 dark:text-slate-100">
+              <TrendingUp size={20} className="text-blue-600 dark:text-blue-400" />
               {t('revenue_by_hour')}
             </h3>
-            <select className="bg-slate-100 dark:bg-slate-800 border-none rounded-lg px-3 py-1 font-bold text-xs uppercase cursor-pointer">
+            <select className="bg-slate-100 dark:bg-slate-800 dark:text-slate-200 border-none rounded-lg px-3 py-1 font-bold text-xs uppercase cursor-pointer">
               <option>{t('today')}</option>
               <option>{t('yesterday')}</option>
             </select>
@@ -108,7 +108,7 @@ export const DashboardView = () => {
                     <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" className="dark:opacity-10" />
                 <XAxis 
                   dataKey="name" 
                   axisLine={false} 
@@ -131,9 +131,9 @@ export const DashboardView = () => {
         </div>
 
         {/* Best Sellers */}
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border dark:border-slate-800 shadow-sm flex flex-col h-96">
-          <h3 className="font-black text-lg uppercase tracking-tight flex items-center gap-2 mb-6">
-            <ShoppingBag size={20} className="text-blue-600" />
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border dark:border-slate-800 shadow-sm flex flex-col h-96 transition-colors duration-300">
+          <h3 className="font-black text-lg uppercase tracking-tight flex items-center gap-2 mb-6 dark:text-slate-100">
+            <ShoppingBag size={20} className="text-blue-600 dark:text-blue-400" />
             {t('top_products')}
           </h3>
           <div className="space-y-4 flex-1 overflow-y-auto">
@@ -141,8 +141,8 @@ export const DashboardView = () => {
               <div key={idx} className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
                 <div className="flex-1">
                   <div className="flex justify-between items-end mb-1">
-                    <span className="font-bold text-sm truncate">{item.name}</span>
-                    <span className="font-black text-xs text-blue-600">{item.sales} {t('items')}</span>
+                    <span className="font-bold text-sm dark:text-slate-300 truncate">{item.name}</span>
+                    <span className="font-black text-xs text-blue-600 dark:text-blue-400">{item.sales} {t('items')}</span>
                   </div>
                   <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <motion.div 

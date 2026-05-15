@@ -58,30 +58,30 @@ export const InventoryView = () => {
       </div>
 
       {/* Inventory Table */}
-      <div className="flex-1 overflow-hidden bg-white dark:bg-slate-900 rounded-2xl border-2 dark:border-slate-800 shadow-sm flex flex-col">
+      <div className="flex-1 overflow-hidden bg-white dark:bg-slate-900 rounded-2xl border-2 dark:border-slate-800 shadow-sm flex flex-col transition-colors duration-300">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-900/50 border-b dark:border-slate-800 sticky top-0 z-10">
-                <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest pl-10">{t('product')}</th>
-                <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest">{t('category')}</th>
-                <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest text-right">{t('price')} ({t('dzd')})</th>
-                <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest text-center">{t('stock')}</th>
-                <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest">{t('status')}</th>
-                <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest text-center">{t('actions')}</th>
+              <tr className="bg-slate-50 dark:bg-slate-800/50 border-b dark:border-slate-800 sticky top-0 z-10 transition-colors duration-300">
+                <th className="p-4 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-10">{t('product')}</th>
+                <th className="p-4 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('category')}</th>
+                <th className="p-4 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest text-right">{t('price')} ({t('dzd')})</th>
+                <th className="p-4 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest text-center">{t('stock')}</th>
+                <th className="p-4 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('status')}</th>
+                <th className="p-4 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest text-center">{t('actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y dark:divide-slate-800 font-bold">
               {MOCK_PRODUCTS.filter(p => p.name.toLowerCase().includes(search.toLowerCase())).map((product) => (
-                <tr key={product.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                <tr key={product.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
                   <td className="p-4 pl-10">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-slate-100 rounded-lg overflow-hidden border dark:border-slate-800">
+                      <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border dark:border-slate-700">
                         <img src={product.image} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex flex-col">
                         <span className="text-sm text-slate-800 dark:text-slate-200">{product.name}</span>
-                        <span className="text-[10px] text-slate-400 tracking-tighter uppercase">{product.barcode}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 tracking-tighter uppercase">{product.barcode}</span>
                       </div>
                     </div>
                   </td>
@@ -99,7 +99,7 @@ export const InventoryView = () => {
                     <div className="flex flex-col items-center">
                       <span className={cn(
                         "text-sm font-black",
-                        product.stock < 10 ? "text-red-600" : "text-slate-800 dark:text-slate-200"
+                        product.stock < 10 ? "text-red-600 dark:text-red-400" : "text-slate-800 dark:text-slate-200"
                       )}>
                         {product.stock}
                       </span>
@@ -116,21 +116,21 @@ export const InventoryView = () => {
                   </td>
                   <td className="p-4 text-xs uppercase font-black">
                     {product.stock < 10 ? (
-                      <span className="text-red-600 flex items-center gap-1">
+                      <span className="text-red-600 dark:text-red-400 flex items-center gap-1">
                         <TrendingDown size={14} /> {t('low')}
                       </span>
                     ) : (
-                      <span className="text-green-600 flex items-center gap-1">
+                      <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
                         <TrendingUp size={14} /> {t('normal')}
                       </span>
                     )}
                   </td>
                   <td className="p-4 text-center">
                     <div className="flex justify-center gap-2">
-                      <button className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-600 rounded-lg transition-all">
+                      <button className="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg transition-all">
                         <Edit size={16} />
                       </button>
-                      <button className="p-2 hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 rounded-lg transition-all">
+                      <button className="p-2 hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg transition-all">
                         <Trash2 size={16} />
                       </button>
                     </div>
