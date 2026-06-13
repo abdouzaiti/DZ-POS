@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Plus, 
@@ -21,6 +21,32 @@ import { formatCurrency, cn } from '../lib/utils';
 export const InventoryView = () => {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 8;
+
+  const filteredProducts = useMemo(() => {
+    return MOCK_PRODUCTS.filter(p => {
+      const query = search.toLowerCase();
+      return p.name.toLowerCase().includes(query) || 
+             p.barcode.includes(query) || 
+             t(p.category).toLowerCase().includes(query);
+    });
+  }, [search, t]);
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE) || 1;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedProducts = useMemo(() => {
+    return filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredProducts, startIndex]);
+
+  const paginationStart = filteredProducts.length === 0 ? 0 : startIndex + 1;
+  const paginationEnd = Math.min(filteredProducts.length, startIndex + ITEMS_PER_PAGE);
 
   return (
     <div className="p-6 flex flex-col h-full gap-6 overflow-hidden">
@@ -72,7 +98,7 @@ export const InventoryView = () => {
               </tr>
             </thead>
             <tbody className="divide-y dark:divide-slate-800 font-bold">
-              {MOCK_PRODUCTS.filter(p => p.name.toLowerCase().includes(search.toLowerCase())).map((product) => (
+              {paginatedProducts.map((product) => (
                 <tr key={product.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
                   <td className="p-4 pl-10">
                     <div className="flex items-center gap-4">
@@ -145,18 +171,40 @@ export const InventoryView = () => {
       {/* Pagination Footer */}
       <div className="flex justify-between items-center shrink-0">
         <p className="text-sm font-bold text-slate-500 uppercase">
-          {t('showing_pagination', { start: 1, end: 8, total: 42 })}
+          {t('showing_pagination', { start: paginationStart, end: paginationEnd, total: filteredProducts.length })}
         </p>
         <div className="flex items-center gap-2">
-          <button className="p-2 border-2 dark:border-slate-800 rounded-xl disabled:opacity-50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+          <button 
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className="p-2 border-2 dark:border-slate-800 rounded-xl disabled:opacity-45 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-slate-600 dark:text-slate-400 cursor-pointer"
+          >
             <ChevronLeft size={20} />
           </button>
           <div className="flex gap-1">
-            <button className="w-10 h-10 bg-blue-600 text-white font-black rounded-xl shadow-lg">1</button>
-            <button className="w-10 h-10 border-2 dark:border-slate-800 font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">2</button>
-            <button className="w-10 h-10 border-2 dark:border-slate-800 font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">3</button>
+            {Array.from({ length: totalPages }).map((_, idx) => {
+              const pageNum = idx + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={cn(
+                    "w-10 h-10 border-2 rounded-xl transition-all font-black text-sm cursor-pointer",
+                    currentPage === pageNum 
+                      ? "bg-blue-600 border-blue-600 text-white shadow-lg" 
+                      : "border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800"
+                  )}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
           </div>
-          <button className="p-2 border-2 dark:border-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+          <button 
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+            className="p-2 border-2 dark:border-slate-800 rounded-xl disabled:opacity-45 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-slate-600 dark:text-slate-400 cursor-pointer"
+          >
             <ChevronRight size={20} />
           </button>
         </div>

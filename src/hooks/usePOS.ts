@@ -66,7 +66,7 @@ export function usePOS() {
     setSales(prev => [newSale, ...prev]);
     clearCart();
     return newSale;
-  }, [cart, total, clearCart]);
+  }, [cart, total, clearCart, sales]);
 
   return {
     cart,

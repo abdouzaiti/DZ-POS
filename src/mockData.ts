@@ -11,6 +11,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.DAIRY,
     unit: "unit",
     isQuick: true,
+    image: "/milk.png",
   },
   {
     id: "b1",
@@ -21,6 +22,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.BAKERY,
     unit: "unit",
     isQuick: true,
+    image: "/baguette.png",
   },
   {
     id: "b2",
@@ -31,6 +33,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.BAKERY,
     unit: "unit",
     isQuick: true,
+    image: "/matlou3.png",
   },
   {
     id: "e1",
@@ -41,6 +44,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.DAIRY,
     unit: "unit",
     isQuick: true,
+    image: "/egg.png",
   },
   {
     id: "e2",
@@ -51,6 +55,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.DAIRY,
     unit: "plate",
     isQuick: true,
+    image: "/eggs_tray.png",
   },
   {
     id: "w1",
@@ -61,6 +66,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.DRINKS,
     unit: "unit",
     isQuick: true,
+    image: "/bottle_5L.png",
   },
 
   // BRANDS / BARCODED
@@ -107,7 +113,6 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 105,
     stock: 100,
     category: Category.GROCERY,
-    isQuick: true,
   },
   {
     id: "o1",
@@ -117,6 +122,7 @@ export const MOCK_PRODUCTS: Product[] = [
     stock: 30,
     category: Category.GROCERY,
     isQuick: true,
+    image: "/elio_oil.png",
   },
   {
     id: "c1",
@@ -137,6 +143,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.FRUITS_VEGGIES,
     unit: "kg",
     isQuick: true,
+    image: "/potato.png",
   },
   {
     id: "fv2",
@@ -147,6 +154,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.FRUITS_VEGGIES,
     unit: "kg",
     isQuick: true,
+    image: "/onions.png",
   },
   {
     id: "fv3",
@@ -157,6 +165,7 @@ export const MOCK_PRODUCTS: Product[] = [
     category: Category.FRUITS_VEGGIES,
     unit: "kg",
     isQuick: true,
+    image: "/tomato.png",
   },
   {
     id: "fv4",
@@ -166,6 +175,17 @@ export const MOCK_PRODUCTS: Product[] = [
     stock: 50,
     category: Category.FRUITS_VEGGIES,
     unit: "kg",
+  },
+  {
+    id: "fv5",
+    barcode: "",
+    name: "Carottes",
+    price: 90,
+    stock: 120,
+    category: Category.FRUITS_VEGGIES,
+    unit: "kg",
+    isQuick: true,
+    image: "/carrot.png",
   },
 
   // BULK / WEIGHT
@@ -203,7 +223,6 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 240,
     stock: 60,
     category: Category.DAIRY,
-    isQuick: true,
   },
   {
     id: "ch2",

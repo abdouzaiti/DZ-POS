@@ -119,6 +119,11 @@ const resources = {
       "date": "Date",
       "total_credit": "Total Crédit",
       "add_credit": "Nouveau Crédit",
+      "amount_paid": "Montant Reçu",
+      "change_to_return": "Rendu (Sarf)",
+      "step_paid_desc": "Saisir le montant reçu et appuyez sur ENTRÉE (OU ENTRÉE pour montant exact)",
+      "step_change_desc": "Rendre la monnaie et appuyez sur ENTRÉE pour générer le ticket",
+      "back": "Retour",
     }
   },
   ar: {
@@ -242,6 +247,11 @@ const resources = {
       "date": "التاريخ",
       "total_credit": "مجموع الدين",
       "add_credit": "إضافة دين",
+      "amount_paid": "المبلغ المدفوع",
+      "change_to_return": "الصرف (الباقي)",
+      "step_paid_desc": "أدخل المبلغ المستلم ثم اضغط ENTER (أو ENTER للمجموع تماماً)",
+      "step_change_desc": "يرجى إعطاء الصرف للزبون ثم اضغط ENTER لتأكيد وطباعة التذكرة",
+      "back": "رجوع",
     }
   }
 };
