@@ -31,7 +31,12 @@ const start = async () => {
   // Spawn the Vite dev server
   const viteProcess = spawn(npmCmd, ['run', 'dev'], {
     stdio: 'inherit',
-    shell: true
+    shell: true,
+    env: {
+      ...process.env,
+      ELECTRON_MIRROR: 'https://npmmirror.com/mirrors/electron/',
+      ELECTRON_BUILDER_BINARIES_MIRROR: 'https://npmmirror.com/mirrors/electron-builder-binaries/'
+    }
   });
 
   // Terminate Vite if this parent dev script is killed
@@ -67,7 +72,12 @@ const start = async () => {
   // Spawn Electron targeting electron/main.js
   const electronProcess = spawn(npxCmd, ['electron', 'electron/main.js'], {
     stdio: 'inherit',
-    shell: true
+    shell: true,
+    env: {
+      ...process.env,
+      ELECTRON_MIRROR: 'https://npmmirror.com/mirrors/electron/',
+      ELECTRON_BUILDER_BINARIES_MIRROR: 'https://npmmirror.com/mirrors/electron-builder-binaries/'
+    }
   });
 
   // When Electron closes, terminate the Vite background process cleanly

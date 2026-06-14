@@ -10,8 +10,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "electron:dev": "cross-env ELECTRON_MIRROR=\"https://npmmirror.com/mirrors/electron/\" node electron/dev.js",
-    "electron:build": "cross-env ELECTRON_MIRROR=\"https://npmmirror.com/mirrors/electron/\" ELECTRON_BUILDER_BINARIES_MIRROR=\"https://npmmirror.com/mirrors/electron-builder-binaries/\" vite build && cross-env ELECTRON_MIRROR=\"https://npmmirror.com/mirrors/electron/\" ELECTRON_BUILDER_BINARIES_MIRROR=\"https://npmmirror.com/mirrors/electron-builder-binaries/\" electron-builder"
+    "electron:dev": "node electron/dev.js",
+    "electron:build": "node electron/build.js"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
