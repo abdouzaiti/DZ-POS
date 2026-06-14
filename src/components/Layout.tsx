@@ -56,7 +56,8 @@ export const Layout = ({ children, activeTab, setActiveTab, onLogout }: { childr
   const { settings } = useSettings();
 
   useEffect(() => {
-    document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    const isAr = i18n.language && i18n.language.startsWith('ar');
+    document.documentElement.dir = isAr ? 'rtl' : 'ltr';
     
     const timer = setInterval(() => setTime(new Date()), 1000);
     const handleStatus = () => setIsOnline(navigator.onLine);
@@ -70,8 +71,10 @@ export const Layout = ({ children, activeTab, setActiveTab, onLogout }: { childr
   }, [i18n.language]);
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'fr' ? 'ar' : 'fr';
+    const isFr = i18n.language && i18n.language.startsWith('fr');
+    const newLang = isFr ? 'ar' : 'fr';
     i18n.changeLanguage(newLang);
+    localStorage.setItem('propos_lang', newLang);
     document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
   };
 
@@ -150,7 +153,7 @@ export const Layout = ({ children, activeTab, setActiveTab, onLogout }: { childr
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 font-medium text-sm transition-colors duration-300">
               <Clock size={16} />
-              <span>{format(time, 'Pp', { locale: i18n.language === 'fr' ? fr : arDZ })}</span>
+              <span>{format(time, 'Pp', { locale: i18n.language && i18n.language.startsWith('fr') ? fr : arDZ })}</span>
             </div>
             
             <div className="flex items-center gap-4">
@@ -158,7 +161,7 @@ export const Layout = ({ children, activeTab, setActiveTab, onLogout }: { childr
                 onClick={toggleLanguage}
                 className="px-3 py-1 text-sm font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded hover:bg-slate-200 dark:hover:bg-slate-700 uppercase transition-colors duration-300"
               >
-                {i18n.language === 'fr' ? 'العربية' : 'FR'}
+                {i18n.language && i18n.language.startsWith('fr') ? 'العربية' : 'FR'}
               </button>
               
               <div className="flex items-center gap-2">

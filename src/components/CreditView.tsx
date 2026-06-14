@@ -84,7 +84,7 @@ export const CreditView = () => {
             ))
           ) : (
             <div className="p-8 text-center">
-              <p className="text-slate-400 text-sm font-medium italic">Aucun crédit trouvé</p>
+              <p className="text-slate-400 text-sm font-medium italic">{t('no_credits_found')}</p>
             </div>
           )}
         </div>
@@ -130,7 +130,7 @@ export const CreditView = () => {
                   </p>
                </div>
                <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-32 transition-colors">
-                  <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Articles</span>
+                  <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('articles')}</span>
                   <p className="text-4xl font-black text-slate-800 dark:text-slate-200 leading-none tracking-tighter">
                     {selectedCredit.items.length}
                   </p>
@@ -139,7 +139,7 @@ export const CreditView = () => {
 
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden mt-2 transition-colors">
               <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 transition-colors">
-                <h3 className="font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight text-sm">Détails du ticket</h3>
+                <h3 className="font-black text-slate-800 dark:text-slate-200 uppercase tracking-tight text-sm">{t('ticket_details')}</h3>
               </div>
               <table className="w-full text-left">
                 <thead className="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800 transition-colors">
@@ -174,7 +174,7 @@ export const CreditView = () => {
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-slate-300 dark:text-slate-700">
              <User size={80} className="mb-4 opacity-20" />
-             <p className="text-xl font-bold uppercase tracking-widest opacity-50 italic">Sélectionnez un client pour voir ses dettes</p>
+             <p className="text-xl font-bold uppercase tracking-widest opacity-50 italic">{t('select_customer_to_view_credit')}</p>
           </div>
         )}
       </div>

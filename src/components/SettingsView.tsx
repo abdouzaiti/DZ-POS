@@ -28,8 +28,10 @@ export const SettingsView = () => {
   };
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'fr' ? 'ar' : 'fr';
+    const isFr = i18n.language && i18n.language.startsWith('fr');
+    const newLang = isFr ? 'ar' : 'fr';
     i18n.changeLanguage(newLang);
+    localStorage.setItem('propos_lang', newLang);
     document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
   };
 
@@ -46,13 +48,13 @@ export const SettingsView = () => {
             className="px-6 py-2 bg-blue-600 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2 uppercase text-sm"
           >
             <Save size={18} />
-            {t('save', 'Save')}
+            {t('save')}
           </button>
         </div>
 
         {showSavedMsg && (
           <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 p-3 rounded-lg font-bold flex items-center justify-center">
-            Paramètres enregistrés avec succès
+            {t('settings_saved_success')}
           </div>
         )}
 
@@ -61,11 +63,11 @@ export const SettingsView = () => {
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border dark:border-slate-800 shadow-sm space-y-4">
             <h3 className="font-black text-lg uppercase flex items-center gap-2 dark:text-slate-100">
               <Store className="text-blue-600" />
-              Général
+              {t('general_settings')}
             </h3>
             
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Nom du magasin (Market Name)</label>
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('market_name')}</label>
               <input
                 type="text"
                 value={marketName}
@@ -78,26 +80,26 @@ export const SettingsView = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold">
                   <Languages size={20} className="text-blue-600" />
-                  <span>Langue ({i18n.language === 'fr' ? 'Français' : 'العربية'})</span>
+                  <span>{t('language')} ({i18n.language && i18n.language.startsWith('fr') ? 'Français' : 'العربية'})</span>
                 </div>
                 <button
                   onClick={toggleLanguage}
                   className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 font-bold rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors uppercase text-sm dark:text-slate-200"
                 >
-                  Changer
+                  {t('change')}
                 </button>
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold">
                   {theme === 'light' ? <Sun size={20} className="text-orange-500"/> : <Moon size={20} className="text-blue-400"/>}
-                  <span>Mode (Light/Dark)</span>
+                  <span>{t('theme_mode')}</span>
                 </div>
                 <button
                   onClick={toggleTheme}
                   className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 font-bold rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors uppercase text-sm dark:text-slate-200"
                 >
-                  Changer
+                  {t('change')}
                 </button>
               </div>
             </div>
@@ -107,7 +109,7 @@ export const SettingsView = () => {
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border dark:border-slate-800 shadow-sm space-y-4">
             <h3 className="font-black text-lg uppercase flex items-center gap-2 dark:text-slate-100">
               <Shield className="text-blue-600" />
-              Sécurité / Connexion
+              {t('security_settings')}
             </h3>
             
             <label className="flex items-center gap-3 cursor-pointer">
@@ -121,13 +123,13 @@ export const SettingsView = () => {
                 <div className={`block w-14 h-8 rounded-full transition-colors ${isLoginEnabled ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'}`}></div>
                 <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${isLoginEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
               </div>
-              <span className="font-bold text-slate-700 dark:text-slate-300">Activer l'écran de connexion</span>
+              <span className="font-bold text-slate-700 dark:text-slate-300">{t('enable_login_screen')}</span>
             </label>
 
             {isLoginEnabled && (
               <div className="space-y-4 pt-4 border-t dark:border-slate-800 animate-in fade-in slide-in-from-top-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Nom d'utilisateur</label>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('username')}</label>
                   <input
                     type="text"
                     value={adminUsername}
@@ -136,7 +138,7 @@ export const SettingsView = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Mot de passe</label>
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('password')}</label>
                   <input
                     type="password"
                     value={adminPassword}

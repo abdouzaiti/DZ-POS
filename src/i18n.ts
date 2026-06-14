@@ -124,6 +124,22 @@ const resources = {
       "step_paid_desc": "Saisir le montant reçu et appuyez sur ENTRÉE (OU ENTRÉE pour montant exact)",
       "step_change_desc": "Rendre la monnaie et appuyez sur ENTRÉE pour générer le ticket",
       "back": "Retour",
+      "sales_today": "Ventes d'aujourd'hui",
+      "general_settings": "Général",
+      "market_name": "Nom du magasin",
+      "language": "Langue",
+      "change": "Changer",
+      "theme_mode": "Mode (Clair/Sombre)",
+      "security_settings": "Sécurité / Connexion",
+      "enable_login_screen": "Activer l'écran de connexion",
+      "username": "Nom d'utilisateur",
+      "password": "Mot de passe",
+      "settings_saved_success": "Paramètres enregistrés avec succès",
+      "save": "Enregistrer",
+      "no_credits_found": "Aucun crédit trouvé",
+      "articles": "Articles",
+      "ticket_details": "Détails du ticket",
+      "select_customer_to_view_credit": "Sélectionnez un client pour voir ses dettes",
     }
   },
   ar: {
@@ -241,7 +257,7 @@ const resources = {
       "no_sales_found": "لم يتم العثور على مبيعات",
       "ticket_recall": "استرجاع التذكرة",
       "cash_movement": "حركة الصندوق",
-      "credits": "الزبائن",
+      "credits": "الزبائن (الديون)",
       "credit": "دين",
       "customer_name": "اسم الزبون",
       "date": "التاريخ",
@@ -252,15 +268,32 @@ const resources = {
       "step_paid_desc": "أدخل المبلغ المستلم ثم اضغط ENTER (أو ENTER للمجموع تماماً)",
       "step_change_desc": "يرجى إعطاء الصرف للزبون ثم اضغط ENTER لتأكيد وطباعة التذكرة",
       "back": "رجوع",
+      "general_settings": "عام",
+      "market_name": "اسم المتجر",
+      "language": "اللغة",
+      "change": "تغيير",
+      "theme_mode": "الوضع (مضيء/مظلم)",
+      "security_settings": "الأمان / تسجيل الدخول",
+      "enable_login_screen": "تفعيل شاشة تسجيل الدخول",
+      "username": "اسم المستخدم",
+      "password": "كلمة المرور",
+      "settings_saved_success": "تم حفظ الإعدادات بنجاح",
+      "save": "حفظ",
+      "no_credits_found": "لم يتم العثور على ديون",
+      "articles": "المواد",
+      "ticket_details": "تفاصيل التذكرة",
+      "select_customer_to_view_credit": "يرجى اختيار زبون لمشاهدة ديونه",
     }
   }
 };
+
+const savedLang = localStorage.getItem('propos_lang') || 'ar';
 
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'ar',
+    lng: savedLang,
     fallbackLng: 'ar',
     interpolation: {
       escapeValue: false
