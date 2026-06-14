@@ -14,6 +14,7 @@ import { LoginScreen } from './components/LoginScreen';
 
 import { ThemeProvider } from './contexts/ThemeContext';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
+import { ProductsProvider } from './contexts/ProductsContext';
 
 const AppContent = () => {
   const [activeView, setActiveView] = useState('sales');
@@ -59,7 +60,9 @@ export default function App() {
   return (
     <SettingsProvider>
       <ThemeProvider>
-        <AppContent />
+        <ProductsProvider>
+          <AppContent />
+        </ProductsProvider>
       </ThemeProvider>
     </SettingsProvider>
   );

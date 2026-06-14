@@ -23,7 +23,8 @@ import {
   Users
 } from 'lucide-react';
 import { usePOS } from '../hooks/usePOS';
-import { MOCK_PRODUCTS, MOCK_CREDITS } from '../mockData';
+import { MOCK_CREDITS } from '../mockData';
+import { useProducts } from '../contexts/ProductsContext';
 import { Category, Product, Sale } from '../types';
 import { cn, formatCurrency, formatNumber } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
@@ -43,6 +44,8 @@ export const SalesView = () => {
     completeSale,
     sales
   } = usePOS();
+  
+  const { products } = useProducts();
 
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -60,7 +63,7 @@ export const SalesView = () => {
   const [amountPaid, setAmountPaid] = useState<string>('');
   const [changeToReturn, setChangeToReturn] = useState<number | null>(null);
 
-  const quickProducts = useMemo(() => MOCK_PRODUCTS.filter(p => p.isQuick), []);
+  const quickProducts = useMemo(() => products.filter(p => p.isQuick), [products]);
   const lastItem = cart.length > 0 ? cart[cart.length - 1] : null;
 
   const initiateCheckout = useCallback(() => {
@@ -276,7 +279,7 @@ export const SalesView = () => {
               e.preventDefault();
             } else if (input.value !== '') {
               // Try to find product by barcode
-              const product = MOCK_PRODUCTS.find(p => p.barcode === input.value);
+              const product = products.find(p => p.barcode === input.value);
               if (product) {
                 handleProductClick(product);
                 setBarcodeValue('');
@@ -293,16 +296,16 @@ export const SalesView = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [cart, selectedProductForManual, manualValue, handleManualSubmit, handleCompleteSale, showCreditModal, showReceipt, clearCart, handleCreditSale, checkoutStep, amountPaid, changeToReturn, initiateCheckout, total, completeSale]);
+  }, [cart, selectedProductForManual, manualValue, handleManualSubmit, handleCompleteSale, showCreditModal, showReceipt, clearCart, handleCreditSale, checkoutStep, amountPaid, changeToReturn, initiateCheckout, total, completeSale, products]);
 
   const filteredProducts = useMemo(() => {
-    return MOCK_PRODUCTS.filter(p => {
+    return products.filter(p => {
       const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
       const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                            p.barcode.includes(searchQuery);
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, products]);
 
   const handleProductClick = (product: Product) => {
     if (product.unit === 'kg' || product.unit === 'g') {

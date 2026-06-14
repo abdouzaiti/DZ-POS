@@ -35,11 +35,30 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   });
 
   useEffect(() => {
-    localStorage.setItem('propos_settings', JSON.stringify(settings));
-  }, [settings]);
+    const loadSettings = async () => {
+      if (window.electronAPI) {
+        try {
+          const electronSettings = await window.electronAPI.getSettings();
+          if (electronSettings && Object.keys(electronSettings).length > 0) {
+            setSettings(prev => ({ ...prev, ...electronSettings }));
+          }
+        } catch (e) {
+          console.error("Electron failed loading settings:", e);
+        }
+      }
+    };
+    loadSettings();
+  }, []);
 
   const updateSettings = (newSettings: Partial<Settings>) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }));
+    setSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      localStorage.setItem('propos_settings', JSON.stringify(updated));
+      if (window.electronAPI) {
+        window.electronAPI.saveSettings(updated).catch(e => console.error("Electron failed saving settings:", e));
+      }
+      return updated;
+    });
   };
 
   return (

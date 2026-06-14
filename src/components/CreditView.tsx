@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Search, 
@@ -37,9 +37,28 @@ export const CreditView = () => {
     return initial;
   });
 
+  useEffect(() => {
+    const loadCredits = async () => {
+      if (window.electronAPI) {
+        try {
+          const electronCredits = await window.electronAPI.getCredits();
+          if (electronCredits && electronCredits.length > 0) {
+            setCredits(electronCredits);
+          }
+        } catch (e) {
+          console.error("Failed to load credits via Electron IPC:", e);
+        }
+      }
+    };
+    loadCredits();
+  }, []);
+
   const saveCredits = (updatedList: any[]) => {
     setCredits(updatedList);
     localStorage.setItem('propos_credits', JSON.stringify(updatedList));
+    if (window.electronAPI) {
+      window.electronAPI.saveCredits(updatedList).catch(e => console.error("Electron failed saving credits:", e));
+    }
   };
 
   // Group unique customers

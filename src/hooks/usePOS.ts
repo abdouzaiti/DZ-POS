@@ -1,9 +1,99 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Product, CartItem, Sale } from '../types';
+import { useProducts } from '../contexts/ProductsContext';
 
 export function usePOS() {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [sales, setSales] = useState<Sale[]>([]);
+  
+  const [sales, setSales] = useState<Sale[]>(() => {
+    const stored = localStorage.getItem('propos_sales');
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error("Failed to parse stored sales:", e);
+      }
+    }
+    
+    // Seed default sales for realistic statistics initially
+    const today = new Date();
+    const seeds: Sale[] = [
+      {
+        id: "TX-541324",
+        sequentialId: 5,
+        items: [
+          { id: "1", name: "Selecto 1.5L", price: 135, quantity: 2, stock: 45, category: "Drinks" as any, barcode: "6130001001" },
+          { id: "b1", name: "Baguette Pain Blanc", price: 15, quantity: 3, stock: 1000, category: "Bakery" as any, barcode: "" }
+        ],
+        total: 315,
+        date: new Date(new Date().setHours(8, 15, 0, 0)).toISOString(),
+        paymentMethod: "Cash"
+      },
+      {
+        id: "TX-541325",
+        sequentialId: 4,
+        items: [
+          { id: "w1", name: "Ifri Eau 5L", price: 130, quantity: 1, stock: 80, category: "Drinks" as any, barcode: "" },
+          { id: "e1", name: "Oeufs (Unité)", price: 18, quantity: 10, stock: 1500, category: "Dairy" as any, barcode: "" }
+        ],
+        total: 310,
+        date: new Date(new Date().setHours(11, 40, 0, 0)).toISOString(),
+        paymentMethod: "Cash"
+      },
+      {
+        id: "TX-541326",
+        sequentialId: 3,
+        items: [
+          { id: "o1", name: "Huile Elio 5L", price: 650, quantity: 2, stock: 30, category: "Grocery" as any, barcode: "6130003004" }
+        ],
+        total: 1300,
+        date: new Date(new Date().setHours(13, 20, 0, 0)).toISOString(),
+        paymentMethod: "Cash"
+      },
+      {
+        id: "TX-541327",
+        sequentialId: 2,
+        items: [
+          { id: "m1", name: "Lait en Sachet (Colombe)", price: 25, quantity: 4, stock: 500, category: "Dairy" as any, barcode: "" },
+          { id: "b2", name: "Pain Matlou3", price: 35, quantity: 2, stock: 200, category: "Bakery" as any, barcode: "" }
+        ],
+        total: 170,
+        date: new Date(new Date().setHours(16, 55, 0, 0)).toISOString(),
+        paymentMethod: "Cash"
+      },
+      {
+        id: "TX-541328",
+        sequentialId: 1,
+        items: [
+          { id: "fv4", name: "Bananes", price: 450, quantity: 1.5, stock: 50, category: "Fruits_Veggies" as any, barcode: "" }
+        ],
+        total: 675,
+        date: new Date(new Date().setHours(19, 10, 0, 0)).toISOString(),
+        paymentMethod: "Cash"
+      }
+    ];
+    localStorage.setItem('propos_sales', JSON.stringify(seeds));
+    return seeds;
+  });
+
+  // Sync with Electron DB for complete sales histories
+  useEffect(() => {
+    const loadSales = async () => {
+      if (window.electronAPI) {
+        try {
+          const electronSales = await window.electronAPI.getSales();
+          if (electronSales && electronSales.length > 0) {
+            setSales(electronSales);
+          }
+        } catch (e) {
+          console.error("Failed to load sales via Electron IPC:", e);
+        }
+      }
+    };
+    loadSales();
+  }, []);
+
+  const { decrementStock } = useProducts();
 
   const addToCart = useCallback((product: Product, quantity: number = 1, customPrice?: number) => {
     setCart(prev => {
@@ -63,10 +153,18 @@ export function usePOS() {
       paymentMethod,
     };
 
-    setSales(prev => [newSale, ...prev]);
+    decrementStock(cart.map(item => ({ id: item.id, quantity: item.quantity })));
+    setSales(prev => {
+      const updated = [newSale, ...prev];
+      localStorage.setItem('propos_sales', JSON.stringify(updated));
+      if (window.electronAPI) {
+        window.electronAPI.saveSales(updated).catch(e => console.error("Electron failed saving sale:", e));
+      }
+      return updated;
+    });
     clearCart();
     return newSale;
-  }, [cart, total, clearCart, sales]);
+  }, [cart, total, clearCart, sales, decrementStock]);
 
   return {
     cart,

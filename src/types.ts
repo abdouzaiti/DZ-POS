@@ -18,6 +18,7 @@ export interface Product {
   image?: string;
   unit?: "unit" | "kg" | "g" | "plate";
   isQuick?: boolean;
+  purchasePrice?: number;
 }
 
 export interface CartItem extends Product {
@@ -42,3 +43,19 @@ export interface Credit {
   sequentialId: number;
   ticketId: string;
 }
+
+declare global {
+  interface Window {
+    electronAPI?: {
+      getProducts: () => Promise<Product[]>;
+      saveProducts: (products: Product[]) => Promise<void>;
+      getSales: () => Promise<Sale[]>;
+      saveSales: (sales: Sale[]) => Promise<void>;
+      getCredits: () => Promise<any[]>;
+      saveCredits: (credits: any[]) => Promise<void>;
+      getSettings: () => Promise<any>;
+      saveSettings: (settings: any) => Promise<void>;
+    };
+  }
+}
+
