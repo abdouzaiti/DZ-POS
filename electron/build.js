@@ -9,6 +9,7 @@ const spawnProcess = (command, args) => {
     const proc = spawn(cmd, args, {
       stdio: 'inherit',
       shell: true,
+      cwd: process.cwd(),
       env: {
         ...process.env,
         ELECTRON_MIRROR: 'https://npmmirror.com/mirrors/electron/',

@@ -32,6 +32,7 @@ const start = async () => {
   const viteProcess = spawn(npmCmd, ['run', 'dev'], {
     stdio: 'inherit',
     shell: true,
+    cwd: process.cwd(),
     env: {
       ...process.env,
       ELECTRON_MIRROR: 'https://npmmirror.com/mirrors/electron/',
@@ -73,6 +74,7 @@ const start = async () => {
   const electronProcess = spawn(npxCmd, ['electron', 'electron/main.js'], {
     stdio: 'inherit',
     shell: true,
+    cwd: process.cwd(),
     env: {
       ...process.env,
       ELECTRON_MIRROR: 'https://npmmirror.com/mirrors/electron/',
