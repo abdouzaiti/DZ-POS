@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "electron:dev": "electron electron/main.js",
+    "electron:dev": "node electron/dev.js",
     "electron:build": "vite build && electron-builder"
   },
   "dependencies": {
