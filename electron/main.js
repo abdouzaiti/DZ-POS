@@ -2,6 +2,11 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Resolve directory paths since we are package-ready ESM/CJS
 const isDev = !app.isPackaged;
