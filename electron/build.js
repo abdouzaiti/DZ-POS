@@ -30,10 +30,10 @@ const spawnProcess = (command, args) => {
 const build = async () => {
   try {
     // 1. Run vite build
-    await spawnProcess('npx', ['vite', 'build']);
+    await spawnProcess('npm', ['run', 'build']);
     
     // 2. Run electron-builder
-    await spawnProcess('npx', ['electron-builder']);
+    await spawnProcess('npm', ['run', 'electron-builder']);
     
     console.log('\n✨ Desktop build completed successfully!');
   } catch (error) {

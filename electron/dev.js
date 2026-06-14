@@ -70,8 +70,8 @@ const start = async () => {
 
   console.log('✅ Vite server is online! Launching Electron desktop window...');
 
-  // Spawn Electron targeting electron/main.js
-  const electronProcess = spawn(npxCmd, ['electron', 'electron/main.js'], {
+  // Spawn Electron using the local npm script
+  const electronProcess = spawn(npmCmd, ['run', 'electron:start'], {
     stdio: 'inherit',
     shell: true,
     cwd: process.cwd(),
