@@ -23,7 +23,7 @@ import {
   Users
 } from 'lucide-react';
 import { usePOS } from '../hooks/usePOS';
-import { MOCK_PRODUCTS } from '../mockData';
+import { MOCK_PRODUCTS, MOCK_CREDITS } from '../mockData';
 import { Category, Product, Sale } from '../types';
 import { cn, formatCurrency, formatNumber } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
@@ -100,11 +100,42 @@ export const SalesView = () => {
   }, [cart]);
 
   const submitCreditSale = () => {
-    if (!creditCustomerName) return;
-    // For now, we'll just complete it as 'Credit' and perhaps prefix the ID or something.
-    // In a real app, this would go to a Credits table.
-    const sale = completeSale(`Credit - ${creditCustomerName}`);
+    if (!creditCustomerName.trim()) return;
+    const sale = completeSale(`Credit - ${creditCustomerName.trim()}`);
     if (sale) {
+      try {
+        const stored = localStorage.getItem('propos_credits');
+        let creditsList = [];
+        if (stored) {
+          creditsList = JSON.parse(stored);
+        } else {
+          creditsList = (MOCK_CREDITS as any[]).map((c: any) => ({ ...c, status: c.status || 'unpaid' }));
+        }
+        
+        const newCredit = {
+          id: 'cr_' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+          customerName: creditCustomerName.trim(),
+          date: new Date().toISOString(),
+          total: sale.total,
+          sequentialId: creditsList.length + 101,
+          ticketId: `TKT-${(creditsList.length + 101).toString().padStart(5, '0')}`,
+          items: sale.items.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            barcode: item.barcode,
+            category: item.category
+          })),
+          status: 'unpaid'
+        };
+        
+        creditsList = [newCredit, ...creditsList];
+        localStorage.setItem('propos_credits', JSON.stringify(creditsList));
+      } catch (err) {
+        console.error("Failed to save credit sale to localStorage:", err);
+      }
+      
       setShowReceipt(sale);
       setShowCreditModal(false);
     }

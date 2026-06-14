@@ -140,6 +140,14 @@ const resources = {
       "articles": "Articles",
       "ticket_details": "Détails du ticket",
       "select_customer_to_view_credit": "Sélectionnez un client pour voir ses dettes",
+      "delete_customer": "Supprimer le client",
+      "delete_ticket": "Supprimer le ticket",
+      "status_credit": "Statut",
+      "paid_credit": "Payé (Khales)",
+      "unpaid_credit": "Non Payé (Mazal)",
+      "mark_as_paid": "Marquer comme payé",
+      "mark_as_unpaid": "Marquer comme non payé",
+      "active_debt": "Dette active",
     }
   },
   ar: {
@@ -283,6 +291,14 @@ const resources = {
       "articles": "المواد",
       "ticket_details": "تفاصيل التذكرة",
       "select_customer_to_view_credit": "يرجى اختيار زبون لمشاهدة ديونه",
+      "delete_customer": "حذف الزبون بالكامل",
+      "delete_ticket": "حذف التذكرة",
+      "status_credit": "الحالة",
+      "paid_credit": "خالص",
+      "unpaid_credit": "دين (مازال)",
+      "mark_as_paid": "تأكيد الدفع (خالص)",
+      "mark_as_unpaid": "إرجاع إلى دين",
+      "active_debt": "الدين المتبقي",
     }
   }
 };
